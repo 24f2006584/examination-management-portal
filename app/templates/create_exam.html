@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2 card p-4 shadow-sm">
+        <h3>Create New Examination</h3>
+        <form method="POST">
+            <div class="mb-3">
+                <label>Select Course</label>
+                <select name="course_id" class="form-control" required>
+                    <option value="">-- Select Course --</option>
+                    {% for course in courses %}
+                        <option value="{{ course.id }}">{{ course.course_code }} - {{ course.course_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Examination Name (e.g., Midterm, Final Demo)</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label>Examination Type</label>
+                <select name="exam_type" class="form-control" required>
+                    <option value="Viva">Viva</option>
+                    <option value="Practical">Practical</option>
+                    <option value="Project Demo">Project Demo</option>
+                    <option value="Assessment">Assessment</option>
+                </select>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>Slot Creation Start Date</label>
+                    <input type="date" name="slot_start" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>Slot Creation End Date</label>
+                    <input type="date" name="slot_end" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>Student Booking Start Date</label>
+                    <input type="date" name="booking_start" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>Student Booking End Date</label>
+                    <input type="date" name="booking_end" class="form-control" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success">Create Examination</button>
+            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

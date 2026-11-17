@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Examiner Dashboard</h2>
+<a href="{{ url_for('auth.logout') }}" class="btn btn-danger btn-sm">Logout</a>
+<hr>
+<p><strong>Welcome, {{ profile.name }}</strong> | Department: {{ profile.department }}</p>
+
+<div class="mb-4">
+    <a href="{{ url_for('examiner.create_slot') }}" class="btn btn-primary">Create Examination Slot</a>
+</div>
+
+<h4>My Examination Slots</h4>
+<table class="table table-bordered bg-white shadow-sm">
+    <thead>
+        <tr>
+            <th>Examination</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Capacity</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for slot in slots %}
+        <tr>
+            <td>{{ slot.examination.name }}</td>
+            <td>{{ slot.date.strftime('%Y-%m-%d') }}</td>
+            <td>{{ slot.start_time.strftime('%H:%M') }} - {{ slot.end_time.strftime('%H:%M') }}</td>
+            <td>{{ slot.capacity }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-center">You haven't created any slots yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Admin Dashboard</h2>
+    <a href="{{ url_for('auth.logout') }}" class="btn btn-danger">Logout</a>
+</div>
+
+<!-- Key Metrics as required by EMP -->
+<div class="row text-white text-center mb-4">
+    <div class="col-md-2 mb-3">
+        <div class="card bg-primary shadow-sm h-100 p-3">
+            <h6>Courses</h6>
+            <h3>{{ t_courses }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="card bg-success shadow-sm h-100 p-3">
+            <h6>Examinations</h6>
+            <h3>{{ t_exams }}</h3>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-info shadow-sm h-100 p-3">
+            <h6>Examiners</h6>
+            <h3>{{ t_examiners }}</h3>
+        </div>
+    </div>
+    <div class="col-md-2 mb-3">
+        <div class="card bg-warning text-dark shadow-sm h-100 p-3">
+            <h6>Students</h6>
+            <h3>{{ t_students }}</h3>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card bg-secondary shadow-sm h-100 p-3">
+            <h6>Bookings</h6>
+            <h3>{{ t_bookings }}</h3>
+        </div>
+    </div>
+</div>
+<div class="mb-4">
+    <a href="{{ url_for('admin.create_course') }}" class="btn btn-primary">Create New Course</a>
+    <a href="{{ url_for('admin.create_examination') }}" class="btn btn-success">Create New Examination</a>
+</div>
+<!-- Pending Examiner Approvals -->
+<h4 class="mt-5">Pending Examiner Approvals</h4>
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for examiner in pending_examiners %}
+                <tr>
+                    <td>{{ examiner.name }}</td>
+                    <td>{{ examiner.department }}</td>
+                    <td>
+                        <form action="{{ url_for('admin.handle_examiner', examiner_id=examiner.id) }}" method="POST" style="display: inline;">
+                            <button type="submit" name="action" value="approve" class="btn btn-sm btn-success">Approve</button>
+                            <button type="submit" name="action" value="reject" class="btn btn-sm btn-danger">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="3" class="text-center text-muted">No pending examiners to approve.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

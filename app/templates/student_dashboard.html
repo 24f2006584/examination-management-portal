@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Student Dashboard</h2>
+<a href="{{ url_for('auth.logout') }}" class="btn btn-danger btn-sm">Logout</a>
+<hr>
+<p><strong>Welcome, {{ profile.name }}</strong></p>
+
+<h4 class="mt-4">Available Examination Slots</h4>
+<div class="row mb-4">
+    {% for slot in available_slots %}
+        <div class="col-md-6 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ slot.examination.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Course: {{ slot.examination.course.course_name }}</h6>
+                    <p class="card-text">
+                        <strong>Date:</strong> {{ slot.date.strftime('%Y-%m-%d') }}<br>
+                        <strong>Time:</strong> {{ slot.start_time.strftime('%H:%M') }} - {{ slot.end_time.strftime('%H:%M') }}<br>
+                        <strong>Capacity:</strong> {{ slot.bookings|length }} / {{ slot.capacity }}
+                    </p>
+
+                    {% if slot.id in booked_slot_ids %}
+                        <button class="btn btn-secondary" disabled>Booked</button>
+                    {% elif slot.bookings|length >= slot.capacity %}
+                        <button class="btn btn-danger" disabled>Full</button>
+                    {% else %}
+                        <form action="{{ url_for('student.book', slot_id=slot.id) }}" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-success">Book Slot</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted">No examination slots available at the moment.</p>
+    {% endfor %}
+</div>
+
+<h4>My Bookings</h4>
+<table class="table table-bordered bg-white shadow-sm">
+    <thead>
+        <tr>
+            <th>Examination</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for booking in bookings %}
+        <tr>
+            <td>{{ booking.slot.examination.name }}</td>
+            <td>{{ booking.slot.date.strftime('%Y-%m-%d') }}</td>
+            <td>{{ booking.slot.start_time.strftime('%H:%M') }}</td>
+            <td><span class="badge bg-info text-dark">{{ booking.status }}</span></td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4" class="text-center">You haven't booked any slots yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

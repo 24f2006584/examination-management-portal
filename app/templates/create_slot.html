@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3 card p-4 shadow-sm">
+        <h3>Create Examination Slot</h3>
+        <form method="POST">
+            <div class="mb-3">
+                <label>Select Examination</label>
+                <select name="exam_id" class="form-control" required>
+                    <option value="">-- Select Examination --</option>
+                    {% for exam in examinations %}
+                        <option value="{{ exam.id }}">{{ exam.course.course_name }} - {{ exam.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>Date</label>
+                <input type="date" name="date" class="form-control" required>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>Start Time</label>
+                    <input type="time" name="start_time" class="form-control" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>End Time</label>
+                    <input type="time" name="end_time" class="form-control" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label>Student Capacity</label>
+                <input type="number" name="capacity" class="form-control" min="1" required>
+            </div>
+            <button type="submit" class="btn btn-success">Create Slot</button>
+            <a href="{{ url_for('examiner.dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
