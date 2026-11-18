@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash
 from app.models import User
-from werkzeug.security import generate_password_hash # Add this to your imports at the top if missing
-from app.models import db # Add this to import your database instance
+from werkzeug.security import generate_password_hash 
+from app.models import db
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -42,18 +42,15 @@ def register():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        # Constraint check: Admin cannot be registered via UI
         if role == 'admin':
             flash('Admin registration is not allowed.')
             return redirect(url_for('auth.register'))
 
-        # Check if username already exists
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             flash('Username already exists. Please choose a different one.')
             return redirect(url_for('auth.register'))
 
-        # Create the new user
         hashed_password = generate_password_hash(password)
         new_user = User(username=username, password_hash=hashed_password, role=role)
         

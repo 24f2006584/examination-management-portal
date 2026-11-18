@@ -14,7 +14,6 @@ def dashboard():
     if not profile:
         return redirect(url_for('student.setup_profile'))
 
-    # Fetch available slots and the student's current bookings
     available_slots = ExaminationSlot.query.all()
     bookings = Booking.query.filter_by(student_id=profile.id).all()
     booked_slot_ids = [b.slot_id for b in bookings]
@@ -48,19 +47,16 @@ def book(slot_id):
     profile = StudentProfile.query.filter_by(user_id=current_user.id).first()
     slot = ExaminationSlot.query.get_or_404(slot_id)
 
-    # Constraint: Prevent overbooking beyond capacity
     current_bookings = Booking.query.filter_by(slot_id=slot_id).count()
     if current_bookings >= slot.capacity:
         flash('This slot is full.')
         return redirect(url_for('student.dashboard'))
 
-    # Constraint: Prevent duplicate bookings
     existing_booking = Booking.query.filter_by(student_id=profile.id, slot_id=slot_id).first()
     if existing_booking:
         flash('You have already booked this slot.')
         return redirect(url_for('student.dashboard'))
 
-    # Create the booking
     new_booking = Booking(student_id=profile.id, slot_id=slot_id)
     db.session.add(new_booking)
     db.session.commit()
